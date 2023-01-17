@@ -1,14 +1,24 @@
 const express = require('express')
-const app = express()
-const port = 5000
-
-const config = require('./config/key')
-
 const mongoose = require('mongoose')
-mongoose.connect(config.mongoURI)
+const bodyParser = require('body-parser')
+
+const characterRouter = require('./routes/Character')
+
+require('dotenv').config()
+
+const app = express()
+
+mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log('Mongo DB Connected ...'))
 .catch((err) => console.log(err))
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
 
-app.listen(port, () => console.log(`Server is running on port ${port}`))
+app.use('/character', characterRouter)
+
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`Server is running on port ${process.env.SERVER_PORT}`)
+})
+
+module.exports = app
