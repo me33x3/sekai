@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Container, Row, Col } from 'react-bootstrap'
 import { charcterAction } from '../redux/actions'
 
 const Limited = () => {
@@ -9,7 +10,7 @@ const Limited = () => {
   } = useSelector((state) => state.character)
 
   useEffect(() => {
-    dispatch(charcterAction.getCharacters())  
+    dispatch(charcterAction.getCharacters())
   }, [])
 
 
@@ -18,10 +19,33 @@ const Limited = () => {
 
   return (
     <div>
-      Limited
-      {characters.map((chr, idx) => (
-        <p key={ idx }>{ chr.chr_nm }</p>
-      ))}
+
+      <Container className='limited-list'>
+
+        <Row className="justify-content-md-center">
+          <Col className='limited-col' md={2}></Col>
+          {[1, 2, 3, 4].map((n, idx) => (
+            <Col className='limited-col' key={ idx } md={1}>{ n }차</Col>
+          ))}
+        </Row>
+
+        {characters.map((chr, idx) => (
+          <Row className="justify-content-md-center" key={ idx } >
+            <Col className='limited-col' md={2}>
+              <img src={ chr.sd } className='limited-sd' height='100' />
+              { chr.name }
+            </Col>
+
+            {[1, 2, 3, 4].map((n, idx) => (
+            <Col className='limited-col' key={ idx } md={1}>
+
+            </Col>
+          ))}
+          </Row>
+        ))}
+      </Container>
+
+      
     </div>
   )
 }
