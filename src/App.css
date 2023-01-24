@@ -3,18 +3,26 @@
   font-family: 'SCDream4';
 }
 
-.limited-list {
+.lmt-list {
   margin: 50px;
 }
 
-.limited-col {
+.lmt-col {
   border-bottom: 1px solid #eee;
   padding: 20px 0 20px 0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.limited-sd {
+.lmt-sd {
   display: block;
   margin: auto;
+  height: 100px;
+}
+
+.lmt-tmb {
+  margin: 0 2px 0 2px;
 }
 
 @font-face {
