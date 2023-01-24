@@ -3,10 +3,10 @@ import { characterActions } from '../reducers/characterReducer'
 
 function getCharacters() {
   return async (dispatch) => {
-    const charactersApi = await axios.get(`/character`)
+    const api = await axios.get(`/character`)
 
     dispatch(characterActions.getCharacters({
-      characters: charactersApi.data
+      characters: api.data
     }))
   }
 }
