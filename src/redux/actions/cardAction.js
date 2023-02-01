@@ -11,6 +11,16 @@ function getCards() {
   }
 }
 
+function getCardsByType(type) {
+  return async (dispatch) => {
+    const api = await axios.get(`/card/type/${type}`)
+
+    dispatch(cardActions.getCardsByType({
+      cards: api.data
+    }))
+  }
+}
+
 function getFrames() {
   return async (dispatch) => {
     const frameApi = axios.get(`/frame`)
@@ -33,5 +43,6 @@ function getFrames() {
 
 export const cardAction = {
   getCards,
+  getCardsByType,
   getFrames
 }

@@ -14,6 +14,9 @@ const cardSlice = createSlice({
     getCards(state, action) {
       state.cards = action.payload.cards
     },
+    getCardsByType(state, action) {
+      state.cards = action.payload.cards
+    },
     getFrames(state, action) {
       state.frames = action.payload.frames
       state.attributes = action.payload.attributes
