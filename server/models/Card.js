@@ -22,6 +22,10 @@ const cardSchema = mongoose.Schema({
     type: Number,
     required: true
   },
+  type: {
+    type: String,
+    required: true
+  },
   thumbnails: {
     type: Array,
     required: true
