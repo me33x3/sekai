@@ -25,6 +25,25 @@
   margin: 0 2px 0 2px;
 }
 
+.ftr-date-area {
+  margin: 50px;
+}
+
+.ftr-date-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ftr-txt-year {
+  font-size: 15px;
+}
+
+.ftr-txt-month {
+  margin: -10px;
+  font-size: 45px; 
+}
+
 @font-face {
   font-family: "SCDream4";
   src: url("./fonts/SCDream4.otf") format("opentype");
