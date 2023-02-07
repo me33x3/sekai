@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { characterReducer, cardReducer } from './reducers'
+import { characterReducer, cardReducer, futureReducer } from './reducers'
 
 const store = configureStore({
   reducer: {
     character: characterReducer,
-    card: cardReducer
+    card: cardReducer,
+    future: futureReducer
   }
 })
 
