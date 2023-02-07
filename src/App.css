@@ -54,12 +54,11 @@
 
 .ftr-evt {
   justify-content: center;
-  height: 100px; 
+  margin: 15px;
 }
 
 .ftr-evt-pick-up {
-  width: 530px;
-  height: 100%;
+  width: 480px;
   text-align: left;
 }
 
@@ -70,13 +69,17 @@
 }
 
 .ftr-evt-img {
-  height: 100%;
-  margin: auto 3px auto 3px;
+  height: 78px;
+  margin: 0 1px;
 }
 
 .ftr-evt-date {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.ftr-evt-banner {
+  width: 220px;
 }
 
 .ftr-evt-title {

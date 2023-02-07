@@ -12,6 +12,10 @@ const Future = () => {
   const [year, setYear] = useState(today[0])
   const [month, setMonth] = useState(today[1])
   const [cardMap, setCardMap] = useState(new Map())
+  const [init, setInit] = useState(false)
+  const [si, setSI] = useState(0)
+  const [ei, setEI] = useState(0)
+  const [futureList, setFutureList] = useState(null)
 
   const dispatch = useDispatch()
 
@@ -43,8 +47,78 @@ const Future = () => {
     setCardMap(map)
   }, [cards])
 
+  useEffect(() => {
+    if (future === null && !init)
+      return
+
+    setInit(true)
+    
+    for (let i=0; i < future.length; i++) {
+      let sy = parseInt(moment(future[i].available_from).format('YYYY'))
+      let sm = parseInt(moment(future[i].available_from).format('MM'))
+      let ey = parseInt(moment(future[i].available_until).format('YYYY'))
+      let em = parseInt(moment(future[i].available_until).format('MM'))
+
+      if (!((sy === year && sm === month) || (ey === year && em === month))) {
+        setEI(i - 1)
+        break
+      }
+    }
+  }, [future])
+
+  useEffect(() => {
+    if (!init)
+      return
+
+    let temp = []
+
+    for (let i=si; i <= ei; i++) {
+      temp.push(future[i])
+    }
+
+    setFutureList(temp)
+  }, [ei])
+
+  useEffect(() => {
+    if (future === null)
+      return
+
+    let tsi = si
+    let tei = ei
+
+    const target = new Date(year, month, 1)
+    const compare = new Date(parseInt(moment(future[tsi].available_until).format('YYYY')), parseInt(moment(future[tsi].available_until).format('MM')), 1)
+
+    if (target < compare) {
+      if (month === parseInt(moment(future[tsi].available_from).format('MM')))
+        tei = tsi
+      else
+        tei = tsi - 1
+      tsi -= 1
+
+      while (tsi >= 0 && month === parseInt(moment(future[tsi].available_until).format('MM'))) {
+        tsi--
+      }
+      tsi++
+    } else {
+      if (month === parseInt(moment(future[tei].available_until).format('MM')))
+        tsi = tei
+      else
+        tsi = tei + 1
+      tei += 1
+
+      while (tei < future.length && month === parseInt(moment(future[tei].available_from).format('MM'))) {
+        tei++
+      }
+      tei--
+    }
+
+    setSI(tsi)
+    setEI(tei)
+  }, [month])
+
   const prevMonth = () => {
-    if (year === today[0] && month === today[1]) {
+    if (si === 0) {
       return
     } else if (month === 1) {
       setMonth(12)
@@ -55,7 +129,9 @@ const Future = () => {
   }
 
   const nextMonth = () => {
-    if (month === 12) {
+    if (ei === future.length-1) {
+      return
+    } else if (month === 12) {
       setMonth(1)
       setYear(year + 1)
     } else {
@@ -66,8 +142,8 @@ const Future = () => {
   const rarityRender = (n) => {
     const render = []
     for (let i=0; i < n; i++)
-      render.push(<image key={ i } href={ rarity[1].icon } height='14' width='14' x={5+(13*i)} y='59' />)
-      
+      render.push(<image key={ i } href={ rarity[n === 2 ? 0 : 1].icon } height='14' width='14' x={5+(13*i)} y='59' />)
+
     return render
   }
 
@@ -76,8 +152,8 @@ const Future = () => {
     const card = cardMap.get(cardId)
 
     render.push(
-      <svg className='ftr-evt-img' width='78' height='78' xmlns='http://www.w3.org/2000/svg'>
-        <image href={ card.thumbnails[1] } width='70' height='70' x='4' y='4' />
+      <svg className='ftr-evt-img' width='78' key={ cardId } height='78' xmlns='http://www.w3.org/2000/svg'>
+        <image href={ card.thumbnails[card.rarity === 2 ? 0 : 1] } width='70' height='70' x='4' y='4' />
         <image href={ frames[card.rarity-1].frame } width='78' height='78' />
         <image href={ attributes[card.attr_id-1].icon } width='17.5' height='17.5' x='0.5' y='0.5' />
         { rarityRender(card.rarity) }
@@ -87,7 +163,7 @@ const Future = () => {
     return render
   }
 
-  if (future === null || cardMap === null)
+  if (futureList === null || cardMap === null)
     return
 
   return (
@@ -110,28 +186,35 @@ const Future = () => {
       </Container>
 
       <div>
-        <ListGroup horizontal className='ftr-evt'>
-          <ListGroup.Item>
-            <div className='ftr-evt-txt ftr-evt-date'>
-              { moment(future[0].available_from).format('MM/DD') } - { moment(future[0].available_until).format('MM/DD') }
-            </div>
-          </ListGroup.Item>
-          <ListGroup.Item >
-            <img className='ftr-evt-img' src={ future[0].banner } />
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div className='ftr-evt-txt ftr-evt-title'>
-              { future[0].title }
-            </div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div className='ftr-evt-pick-up'>
-              { future[0].pick_up_card_id.map((i, idx) => (
-                cardRender(future[0].pick_up_card_id[idx])
-              )) }
-            </div>
-          </ListGroup.Item>
-        </ListGroup>
+        {
+          futureList.map((item, idx) => (
+            <ListGroup horizontal className='ftr-evt' key={ idx }>
+              <ListGroup.Item>
+                <div className='ftr-evt-txt ftr-evt-date'>
+                  { moment(item.available_from).format('MM/DD') } - { moment(item.available_until).format('MM/DD') }
+                </div>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <div className='ftr-evt-banner'>
+                  <img className='ftr-evt-img' src={ item.banner } />
+                </div>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <div className='ftr-evt-txt ftr-evt-title'>
+                  { item.title }
+                </div>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <div className='ftr-evt-pick-up'>
+                  { item.pick_up_card_id.map((card_id) => (
+                    cardRender(card_id)
+                  )) }
+                </div>
+              </ListGroup.Item>
+            </ListGroup>
+          ))
+        }
+        
       </div>
     </div>
   )
