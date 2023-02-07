@@ -63,6 +63,30 @@ const Future = () => {
     }
   }
 
+  const rarityRender = (n) => {
+    const render = []
+    for (let i=0; i < n; i++)
+      render.push(<image key={ i } href={ rarity[1].icon } height='14' width='14' x={5+(13*i)} y='59' />)
+      
+    return render
+  }
+
+  const cardRender = (cardId) => {
+    const render = []
+    const card = cardMap.get(cardId)
+
+    render.push(
+      <svg className='ftr-evt-img' width='78' height='78' xmlns='http://www.w3.org/2000/svg'>
+        <image href={ card.thumbnails[1] } width='70' height='70' x='4' y='4' />
+        <image href={ frames[card.rarity-1].frame } width='78' height='78' />
+        <image href={ attributes[card.attr_id-1].icon } width='17.5' height='17.5' x='0.5' y='0.5' />
+        { rarityRender(card.rarity) }
+      </svg>
+    )
+
+    return render
+  }
+
   if (future === null || cardMap === null)
     return
 
@@ -103,7 +127,7 @@ const Future = () => {
           <ListGroup.Item>
             <div className='ftr-evt-pick-up'>
               { future[0].pick_up_card_id.map((i, idx) => (
-                <img className='ftr-evt-img' src={ cardMap.get(future[0].pick_up_card_id[idx])['thumbnails'][1] } />
+                cardRender(future[0].pick_up_card_id[idx])
               )) }
             </div>
           </ListGroup.Item>

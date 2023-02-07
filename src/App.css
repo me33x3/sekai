@@ -71,7 +71,7 @@
 
 .ftr-evt-img {
   height: 100%;
-  padding: 0 3px 0 3px;
+  margin: auto 3px auto 3px;
 }
 
 .ftr-evt-date {
