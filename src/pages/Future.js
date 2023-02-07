@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { Container, Row, Col, Button, ListGroup } from 'react-bootstrap'
+import { cardAction, futureAction } from '../redux/actions';
 import moment from 'moment'
 import 'moment/locale/ko';
 
@@ -9,6 +11,37 @@ const Future = () => {
 
   const [year, setYear] = useState(today[0])
   const [month, setMonth] = useState(today[1])
+  const [cardMap, setCardMap] = useState(new Map())
+
+  const dispatch = useDispatch()
+
+  const {
+    cards,
+    frames,
+    attributes,
+    rarity
+  } = useSelector((state) => state.card)
+
+  const {
+    future 
+  } = useSelector((state) => state.future)
+
+  useEffect(() => {
+    dispatch(cardAction.getCards())
+    dispatch(cardAction.getFrames())
+    dispatch(futureAction.getFuture())
+  }, [])
+
+  useEffect(() => {
+    if (cards === null)
+      return
+
+    let map = new Map()
+    for (let i = 0; i < cards.length; i++) {
+      map.set(cards[i].card_id, cards[i])
+    }
+    setCardMap(map)
+  }, [cards])
 
   const prevMonth = () => {
     if (year === today[0] && month === today[1]) {
@@ -30,6 +63,9 @@ const Future = () => {
     }
   }
 
+  if (future === null || cardMap === null)
+    return
+
   return (
     <div>
       <Container className='ftr-date-area'>
@@ -48,6 +84,31 @@ const Future = () => {
           </Col>
         </Row>
       </Container>
+
+      <div>
+        <ListGroup horizontal className='ftr-evt'>
+          <ListGroup.Item>
+            <div className='ftr-evt-txt ftr-evt-date'>
+              { moment(future[0].available_from).format('MM/DD') } - { moment(future[0].available_until).format('MM/DD') }
+            </div>
+          </ListGroup.Item>
+          <ListGroup.Item >
+            <img className='ftr-evt-img' src={ future[0].banner } />
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div className='ftr-evt-txt ftr-evt-title'>
+              { future[0].title }
+            </div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div className='ftr-evt-pick-up'>
+              { future[0].pick_up_card_id.map((i, idx) => (
+                <img className='ftr-evt-img' src={ cardMap.get(future[0].pick_up_card_id[idx])['thumbnails'][1] } />
+              )) }
+            </div>
+          </ListGroup.Item>
+        </ListGroup>
+      </div>
     </div>
   )
 }

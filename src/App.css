@@ -44,6 +44,45 @@
   font-size: 45px; 
 }
 
+.ftr-evt-area {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  border: 2px solid #eee;
+}
+
+.ftr-evt {
+  justify-content: center;
+  height: 100px; 
+}
+
+.ftr-evt-pick-up {
+  width: 530px;
+  height: 100%;
+  text-align: left;
+}
+
+.ftr-evt-txt {
+  height: 100%;
+  display : flex;
+  align-items : center;
+}
+
+.ftr-evt-img {
+  height: 100%;
+  padding: 0 3px 0 3px;
+}
+
+.ftr-evt-date {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.ftr-evt-title {
+  width: 20rem;
+}
+
 @font-face {
   font-family: "SCDream4";
   src: url("./fonts/SCDream4.otf") format("opentype");
